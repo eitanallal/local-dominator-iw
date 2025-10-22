@@ -1,48 +1,28 @@
-import NxWelcome from './nx-welcome';
+import { JSX } from 'react';
+import { Route, Routes, Navigate } from 'react-router-dom';
+import { LoginPage, RegisterPage, NotesPage } from '../routes/';
 
-import { Route, Routes, Link } from 'react-router-dom';
+const ProtectedRoute = ({ children }: { children: JSX.Element }) => {
+  const token = localStorage.getItem('token');
+  return token ? children : <Navigate to="/login" />;
+};
 
 export function App() {
   return (
     <div>
-      <NxWelcome title="@local-dominator-iw/client" />
-
-      {/* START: routes */}
-      {/* These routes and navigation have been generated for you */}
-      {/* Feel free to move and update them to fit your needs */}
-      <br />
-      <hr />
-      <br />
-      <div role="navigation">
-        <ul>
-          <li>
-            <Link to="/">Home</Link>
-          </li>
-          <li>
-            <Link to="/page-2">Page 2</Link>
-          </li>
-        </ul>
-      </div>
       <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
         <Route
-          path="/"
+          path="/notes"
           element={
-            <div>
-              This is the generated root route.{' '}
-              <Link to="/page-2">Click here for page 2.</Link>
-            </div>
+            <ProtectedRoute>
+              <NotesPage />
+            </ProtectedRoute>
           }
         />
-        <Route
-          path="/page-2"
-          element={
-            <div>
-              <Link to="/">Click here to go back to root page.</Link>
-            </div>
-          }
-        />
+        <Route path="*" element={<Navigate to="/notes" />} />
       </Routes>
-      {/* END: routes */}
     </div>
   );
 }

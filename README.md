@@ -1,109 +1,71 @@
-# LocalDominatorIw
+Nx Monorepo: React Client + NestJS Server
+This repository contains a full-stack application built with Nx. It includes a React Vite frontend, a NestJS backend, and a PostgreSQL database, all orchestrated via Docker Compose. The setup supports multiple backend and frontend instances with NGINX load balancing.
+Setup Instructions
+Prerequisites:
 
-<a alt="Nx logo" href="https://nx.dev" target="_blank" rel="noreferrer"><img src="https://raw.githubusercontent.com/nrwl/nx/master/images/nx-logo.png" width="45"></a>
+- Docker & Docker Compose installed
+- Node.js >= 22 (for local development)
+- Nx CLI (optional, can use npx nx)
 
-✨ Your new, shiny [Nx workspace](https://nx.dev) is ready ✨.
+Clone the repository:
+git clone <repo-url>
+cd <repo-root>
 
-[Learn more about this workspace setup and its capabilities](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects) or run `npx nx graph` to visually explore what was created. Now, let's get you up to speed!
+Install dependencies (optional):
+npm install
 
-## Generate a library
+Build and run with Docker Compose:
+docker-compose up --build
 
-```sh
-npx nx g @nx/js:lib packages/pkg1 --publishable --importPath=@my-org/pkg1
-```
+Access the application:
 
-## Run tasks
+- Frontend: http://localhost:8080 and http://localhost:8081
+- Backend API via NGINX: http://localhost:3000
+- Database: postgres://postgres:postgres@localhost:5432/mydb
+  API List
+  Method Path Description
+  GET /api/health Health check
+  GET /api/users List all users
+  POST /api/users Create a new user
+  GET /api/users/:id Get user by ID
+  PUT /api/users/:id Update user by ID
+  DELETE /api/users/:id Delete user by ID
+  Architecture
+  Monorepo structure (Nx):
+  apps/
+  server/ # NestJS API
+  client/ # React Vite frontend
+  libs/ # Shared code, types, utilities
 
-To build the library use:
+Dockerized setup diagram:
+Tradeoffs
+Pros:
 
-```sh
-npx nx build pkg1
-```
+- Multiple backend/frontend instances improve availability and scaling.
+- NGINX load balancer provides a single API endpoint for the frontend.
+- Nx monorepo simplifies sharing code between apps.
+- Dockerization ensures reproducible environments.
 
-To run any task with Nx use:
+Cons:
 
-```sh
-npx nx <target> <project-name>
-```
+- Increased complexity: multiple containers to manage.
+- Local development may require multiple ports.
 
-These targets are either [inferred automatically](https://nx.dev/concepts/inferred-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) or defined in the `project.json` or `package.json` files.
+  Commands Reference
+  Build & run all services:
+  docker-compose up --build
 
-[More about running tasks in the docs &raquo;](https://nx.dev/features/run-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+Run only backend servers:
+docker-compose up --build server1 server2
 
-## Versioning and releasing
+Run only frontend:
+docker-compose up --build react1 react2
 
-To version and release the library use
+Stop all services:
+docker-compose down
+Notes
 
-```
-npx nx release
-```
-
-Pass `--dry-run` to see what would happen without actually releasing the library.
-
-[Learn more about Nx release &raquo;](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Keep TypeScript project references up to date
-
-Nx automatically updates TypeScript [project references](https://www.typescriptlang.org/docs/handbook/project-references.html) in `tsconfig.json` files to ensure they remain accurate based on your project dependencies (`import` or `require` statements). This sync is automatically done when running tasks such as `build` or `typecheck`, which require updated references to function correctly.
-
-To manually trigger the process to sync the project graph dependencies information to the TypeScript project references, run the following command:
-
-```sh
-npx nx sync
-```
-
-You can enforce that the TypeScript project references are always in the correct state when running in CI by adding a step to your CI job configuration that runs the following command:
-
-```sh
-npx nx sync:check
-```
-
-[Learn more about nx sync](https://nx.dev/reference/nx-commands#sync)
-
-## Set up CI!
-
-### Step 1
-
-To connect to Nx Cloud, run the following command:
-
-```sh
-npx nx connect
-```
-
-Connecting to Nx Cloud ensures a [fast and scalable CI](https://nx.dev/ci/intro/why-nx-cloud?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects) pipeline. It includes features such as:
-
-- [Remote caching](https://nx.dev/ci/features/remote-cache?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task distribution across multiple machines](https://nx.dev/ci/features/distribute-task-execution?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Automated e2e test splitting](https://nx.dev/ci/features/split-e2e-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Task flakiness detection and rerunning](https://nx.dev/ci/features/flaky-tasks?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-### Step 2
-
-Use the following command to configure a CI workflow for your workspace:
-
-```sh
-npx nx g ci-workflow
-```
-
-[Learn more about Nx on CI](https://nx.dev/ci/intro/ci-with-nx#ready-get-started-with-your-provider?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Install Nx Console
-
-Nx Console is an editor extension that enriches your developer experience. It lets you run tasks, generate code, and improves code autocompletion in your IDE. It is available for VSCode and IntelliJ.
-
-[Install Nx Console &raquo;](https://nx.dev/getting-started/editor-setup?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-## Useful links
-
-Learn more:
-
-- [Learn more about this workspace setup](https://nx.dev/nx-api/js?utm_source=nx_project&amp;utm_medium=readme&amp;utm_campaign=nx_projects)
-- [Learn about Nx on CI](https://nx.dev/ci/intro/ci-with-nx?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [Releasing Packages with Nx release](https://nx.dev/features/manage-releases?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-- [What are Nx plugins?](https://nx.dev/concepts/nx-plugins?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
-
-And join the Nx community:
-- [Discord](https://go.nx.dev/community)
-- [Follow us on X](https://twitter.com/nxdevtools) or [LinkedIn](https://www.linkedin.com/company/nrwl)
-- [Our Youtube channel](https://www.youtube.com/@nxdevtools)
-- [Our blog](https://nx.dev/blog?utm_source=nx_project&utm_medium=readme&utm_campaign=nx_projects)
+- Frontend calls backend API via http://api_lb (inside Docker network)
+- For production, consider HTTPS termination at NGINX
+- Add environment variables for DB credentials, API URLs, etc.
+- Docker volumes persist the database between restarts.

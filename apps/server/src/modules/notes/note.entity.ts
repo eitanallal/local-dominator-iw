@@ -16,7 +16,7 @@ export class Note {
   @Column('text')
   title!: string;
 
-  @Column('array')
+  @Column('text', { array: true, nullable: true })
   tags!: string[];
 
   @ManyToOne(() => User, { eager: false })

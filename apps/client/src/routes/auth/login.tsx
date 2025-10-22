@@ -11,7 +11,6 @@ export const LoginPage: React.FC = () => {
   const handleLogin = async () => {
     try {
       const res = await api.post('/auth/login', { email, password });
-      console.log('Saving token:', res.data.token);
       localStorage.setItem('token', res.data.token);
       navigate('/notes');
     } catch (err: any) {

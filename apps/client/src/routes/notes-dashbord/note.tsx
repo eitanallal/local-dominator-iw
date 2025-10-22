@@ -28,7 +28,7 @@ export const Note: React.FC<Props> = ({ note, handleDelete, handleUpdate }) => {
           />
           <textarea
             className="border p-1 mb-1 w-full"
-            value={content}
+            value={!content ? '' : content}
             onChange={(e) => setContent(e.target.value)}
           />
           <div className="flex gap-2">
@@ -49,7 +49,7 @@ export const Note: React.FC<Props> = ({ note, handleDelete, handleUpdate }) => {
       ) : (
         <>
           <h3 className="font-bold">{note.title}</h3>
-          <p>{note.content}</p>
+          <p>{note.content ?? 'No content has been added for this note'}</p>
           {note.tags && (
             <p className="text-sm text-gray-500">
               Tags: {note.tags.join(', ')}

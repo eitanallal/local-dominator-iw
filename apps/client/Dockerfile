@@ -1,21 +1,30 @@
-FROM node:22-alpine AS base
+# Stage 1: Build
+FROM node:22-alpine AS builder
 
 WORKDIR /app
 
-# Copy root package files and install dependencies
+# Copy workspace configuration files
 COPY package*.json ./
+COPY nx.json ./
+COPY tsconfig*.json ./
 
-# Rebuild the entire project if something in the monorepo changes
+# Copy the entire workspace structure needed for build
+COPY apps/client/package.json ./apps/client/
+COPY libs/ ./libs/
+
+# Install dependencies
 RUN npm install
 
-# Copy the rest of the monorepo source
 COPY . .
 
-# Build the server app
-RUN nx build client
+RUN npx nx build client 
 
-# Expose the port
-EXPOSE 3000
+# Stage 2: Serve
+FROM nginx:stable-alpine
 
-# Command to run the application
-CMD ["node", "main.js"]
+# Copy the built files to nginx
+COPY --from=builder /app/apps/client/dist /usr/share/nginx/html
+
+EXPOSE 80
+
+CMD ["nginx", "-g", "daemon off;"]
